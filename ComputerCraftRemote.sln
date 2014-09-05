@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputerCraftRemote", "ComputerCraftRemote\ComputerCraftRemote.csproj", "{B5B17BC0-C0A0-4A0F-A4F3-F9F5F4178CE4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputerCraftHost", "ComputerCraftHost\ComputerCraftHost.csproj", "{7CFD7FB9-38A5-4689-AE37-F2F74105131C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B5B17BC0-C0A0-4A0F-A4F3-F9F5F4178CE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5B17BC0-C0A0-4A0F-A4F3-F9F5F4178CE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5B17BC0-C0A0-4A0F-A4F3-F9F5F4178CE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5B17BC0-C0A0-4A0F-A4F3-F9F5F4178CE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CFD7FB9-38A5-4689-AE37-F2F74105131C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CFD7FB9-38A5-4689-AE37-F2F74105131C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CFD7FB9-38A5-4689-AE37-F2F74105131C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CFD7FB9-38A5-4689-AE37-F2F74105131C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
