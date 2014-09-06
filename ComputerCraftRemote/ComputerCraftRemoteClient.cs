@@ -18,7 +18,7 @@ namespace ComputerCraftRemote
         private NetClient m_netClient;
         private RpcHost m_rpcHost;
         private NetConnection m_serverTarget;
-        private TurtleServiceClient m_turtleClient;
+        private CCServiceClient m_turtleClient;
 
         internal String Username;
 
@@ -45,9 +45,9 @@ namespace ComputerCraftRemote
         {
         }
 
-        public TurtleServiceClient GetTurtleService()
+        public CCServiceClient GetTurtleService()
         {
-            return new TurtleServiceClient(m_rpcHost, m_serverTarget);
+            return new CCServiceClient(m_rpcHost, m_serverTarget);
         }
 
         public Turtle[] GetAllTurtles()

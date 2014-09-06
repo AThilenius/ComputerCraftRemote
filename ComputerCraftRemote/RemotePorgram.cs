@@ -15,7 +15,9 @@ namespace ComputerCraftRemote
         {
             ComputerCraftRemoteClient client = new ComputerCraftRemoteClient("Alec", "localhost", 9090);
 
-            TurtleServiceClient turtleService = client.GetTurtleService();
+            CCServiceClient turtleService = client.GetTurtleService();
+
+            turtleService.InvokeCommandOnTurtle(0, "doesNotExist.AlsoDoesntExist()");
             
             //for(int i = 0; i < 100; i++)
             //{

@@ -15,8 +15,8 @@ namespace ComputerCraft.Core.Rpc
         // Commands sent as: MethodName
         public RpcResponse Invoke(RpcRequest rpcRequest)
         {
-            //try
-            //{
+            try
+            {
                 Assembly assembly = Assembly.GetEntryAssembly();
                 Type type = assembly.GetType(rpcRequest.TypePath);
                 MethodInfo method = type.GetMethod(rpcRequest.Methodpath);
@@ -32,30 +32,30 @@ namespace ComputerCraft.Core.Rpc
                     DidThrowException = false,
                     ReturnedObject = retVal
                 };
-            //}
-            //catch (Exception ex)
-            //{
-            //    if (ex.InnerException != null && ex.InnerException.Message != "")
-            //    {
-            //        Console.WriteLine("Remote invoke exception: " + ex.InnerException.Message);
-            //        return new RpcResponse
-            //        {
-            //            CallbackToken = rpcRequest.CallbackToken,
-            //            DidThrowException = true,
-            //            ReturnedObject = "[REMOTE_INVOKE_EXCEPTION]: " + ex.InnerException.Message
-            //        };
-            //    }
-            //    else
-            //    {
-            //        Console.WriteLine("Remote invoke exception: " + ex.Message);
-            //        return new RpcResponse
-            //        {
-            //            CallbackToken = rpcRequest.CallbackToken,
-            //            DidThrowException = true,
-            //            ReturnedObject = "[REMOTE_INVOKE_EXCEPTION]: " + ex.Message
-            //        };
-            //    }
-            //}
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException != null && ex.InnerException.Message != "")
+                {
+                    Console.WriteLine("Remote invoke exception: " + ex.InnerException.Message);
+                    return new RpcResponse
+                    {
+                        CallbackToken = rpcRequest.CallbackToken,
+                        DidThrowException = true,
+                        ReturnedObject = "[REMOTE_INVOKE_EXCEPTION]: " + ex.InnerException.Message
+                    };
+                }
+                else
+                {
+                    Console.WriteLine("Remote invoke exception: " + ex.Message);
+                    return new RpcResponse
+                    {
+                        CallbackToken = rpcRequest.CallbackToken,
+                        DidThrowException = true,
+                        ReturnedObject = "[REMOTE_INVOKE_EXCEPTION]: " + ex.Message
+                    };
+                }
+            }
 
         }
     }

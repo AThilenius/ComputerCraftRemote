@@ -47,9 +47,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Services\Pooling\PoolingServiceHandler.cs" />
-    <Compile Include="Services\Turtle\TurtleServiceClient.cs" />
-    <Compile Include="Services\Turtle\TurtleServiceHandler.cs" />
+    <Compile Include="Services\Turtle\CCServiceClient.cs" />
+    <Compile Include="Services\Turtle\CCServiceHandler.cs" />
     <Compile Include="ComputerRemoteServer.cs" />
     <Compile Include="Http\HttpProcessor.cs" />
     <Compile Include="Http\HttpServer.cs" />

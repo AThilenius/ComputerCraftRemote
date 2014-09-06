@@ -18,7 +18,7 @@ namespace ComputerCraftRemote
             QueueHttpServer httpServer = new QueueHttpServer(80);
             Task.Factory.StartNew(httpServer.listen);
 
-            TurtleServiceHandler.Initialize(httpServer);
+            CCServiceHandler.Initialize(httpServer);
 
             ComputerRemoteServer server = new ComputerRemoteServer(httpServer);
             server.Start();

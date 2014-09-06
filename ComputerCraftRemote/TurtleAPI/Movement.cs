@@ -10,7 +10,7 @@ namespace ComputerCraftRemote.TurtleAPI
     public class Movement
     {
         private Turtle m_turtle;
-        private TurtleServiceClient m_turtleService;
+        private CCServiceClient m_turtleService;
 
         internal Movement(Turtle turtle)
         {

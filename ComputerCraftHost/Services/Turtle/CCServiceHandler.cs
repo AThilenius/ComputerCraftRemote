@@ -22,7 +22,7 @@ namespace ComputerCraftHost.Services.Turtle
         public String OwnerName;
     }
 
-    public static class TurtleServiceHandler
+    public static class CCServiceHandler
     {
         private static Boolean m_wasInitialized;
         private static QueueHttpServer m_httpServer;

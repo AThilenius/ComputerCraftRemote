@@ -19,8 +19,8 @@ namespace ComputerCraftRemote
             // Blocking, Concurrent Queues
             private BlockingCollection<String> m_commandBuffer 
                 = new BlockingCollection<String>(new ConcurrentQueue<String>());
-            private BlockingCollection<String> m_returnBuffer 
-                = new BlockingCollection<String>(new ConcurrentQueue<String>());
+            private BlockingCollection<Object> m_returnBuffer
+                = new BlockingCollection<Object>(new ConcurrentQueue<Object>());
 
             /// <summary>
             /// Used by calling code (Thrift)
@@ -30,7 +30,12 @@ namespace ComputerCraftRemote
             public String ThriftRunCommand(String command)
             {
                 m_commandBuffer.Add(command);
-                return m_returnBuffer.Take();
+                Object returnValue = m_returnBuffer.Take();
+
+                if (returnValue is Exception)
+                    throw (Exception)returnValue;
+
+                return (String) m_returnBuffer.Take();
             }
 
             /// <summary>
@@ -48,7 +53,7 @@ namespace ComputerCraftRemote
             /// Enqueues an item to the return buffer, releasing the blocked
             /// Thrift RPC
             /// </summary>
-            public void CCEnqueueReturnBuffer(String returnValue)
+            public void CCEnqueueReturnBuffer(Object returnValue)
             {
                 m_returnBuffer.Add(returnValue);
             }
@@ -58,7 +63,8 @@ namespace ComputerCraftRemote
         private enum UrlCommandTypes
         {
             Link,
-            Command
+            Command,
+            Error
         }
 
         public Dictionary<String, String> OwnerByPoolName = new Dictionary<String, String>();
@@ -124,6 +130,15 @@ namespace ComputerCraftRemote
                         ComputerBuffers buffer = GetComputerBuffers(computerId);
                         // Enqueue the return from the POST data
                         buffer.CCEnqueueReturnBuffer(data);
+                        break;
+                    }
+
+                case UrlCommandTypes.Error:
+                    {
+
+                        ComputerBuffers buffer = GetComputerBuffers(computerId);
+                        // Enqueue the return from the POST data
+                        buffer.CCEnqueueReturnBuffer(new Exception(data));
                         break;
                     }
 
@@ -201,6 +216,9 @@ namespace ComputerCraftRemote
 
             else if (tokens[0] == "command")
                 return UrlCommandTypes.Command;
+
+            else if (tokens[0] == "error")
+                return UrlCommandTypes.Error;
 
             else
                 throw new NotSupportedException("Unsupported URL command type: " + tokens[0]);
