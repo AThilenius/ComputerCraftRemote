@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Thrift.Server;
-using Thrift.Transport;
+using ComputerCraft.Core.Rpc;
+using ComputerCraftHost;
+using ComputerCraftHost.Services.Turtle;
+using Lidgren.Network;
 
 namespace ComputerCraftRemote
 {
@@ -16,24 +18,16 @@ namespace ComputerCraftRemote
             QueueHttpServer httpServer = new QueueHttpServer(80);
             Task.Factory.StartNew(httpServer.listen);
 
-            Task.Factory.StartNew(() =>
-                {
-                    ComputerRemoteHandler handler = new ComputerRemoteHandler(httpServer);
-                    ComputerRemote.Processor processor = new ComputerRemote.Processor(handler);
-                    TServerTransport serverTransport = new TServerSocket(9090);
-                    TServer server = new TThreadPoolServer(processor, serverTransport);
+            TurtleServiceHandler.Initialize(httpServer);
 
-                    Console.WriteLine("Starting Remote Service...");
-                    server.Serve();
-                });
-
-            Thread.Sleep(100);
+            ComputerRemoteServer server = new ComputerRemoteServer(httpServer);
+            server.Start();
 
             while (true)
             {
                 Console.Write("> ");
                 String command = Console.ReadLine();
-                Int32 id = Int32.Parse(command.Split()[0]);
+                int id = int.Parse(command.Split()[0]);
                 command = command.Remove(0, 2);
                 Console.Write("[" + command + "]: ");
                 String results = httpServer.RunCommand(id, command);

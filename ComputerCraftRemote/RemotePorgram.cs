@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Thrift.Protocol;
-using Thrift.Server;
-using Thrift.Transport;
+using ComputerCraftHost.Services.Turtle;
 
 namespace ComputerCraftRemote
 {
@@ -14,47 +13,37 @@ namespace ComputerCraftRemote
     {
         public static void Main(String[] args)
         {
-            ComputerCraftRemoteServer server = new ComputerCraftRemoteServer("Alec", "localhost", 9090);
+            ComputerCraftRemoteClient client = new ComputerCraftRemoteClient("Alec", "localhost", 9090);
+
+            TurtleServiceClient turtleService = client.GetTurtleService();
             
-            //while (true)
+            for(int i = 0; i < 50; i++)
+            {
+                Thread thread = new Thread((turtleNum) =>
+                    {
+                        Console.WriteLine("Thread: " + (int)turtleNum);
+                        Stopwatch timer = Stopwatch.StartNew();
+                        int count = 1000;
+                        for (int c = 0; c < count; c++)
+                            turtleService.QuickReturn("Hello World!");
+                        timer.Stop();
+                        Console.WriteLine("Thread: [" + (int)turtleNum + "] took [" + timer.Elapsed + "], or [" + ((float)count) / timer.Elapsed.TotalSeconds + "] Ops/Second");
+                    });
+                thread.Name = "Pusher: " + i;
+                thread.Start(i);
+            }
+
+            //for (int i = 0; i < 10; i++)
             //{
-            //    turtle6.Movement.Forward();
-            //    turtle6.Movement.TurnRight();
-            //}
-
-            //Task.Factory.StartNew(() =>
+            //    Thread thread = new Thread((turtleNum) =>
             //    {
+            //        Console.WriteLine("Thread: " + (int)turtleNum);
             //        while (true)
-            //        {
-            //            Console.Clear();
-            //            Console.WriteLine("All Turtles");
-            //            foreach (Turtle turtle in server.GetAllTurtles())
-            //                Console.WriteLine("Turtle: [" + turtle.TurtleID + "] in Pool: [" + turtle.Pool.Name + "] at location [" + turtle.StartLocation + "]");
-
-            //            Console.WriteLine("\nAll Pools");
-            //            foreach (TurtlePool pool in server.GetAllPools())
-            //                Console.WriteLine("Pool: [" + pool.Name + "] owned by: [" + pool.Owner + "]");
-
-            //            Console.WriteLine("\n\nOwned Turtles");
-            //            foreach (Turtle turtle in server.GetAllOwnedTurtles())
-            //                Console.WriteLine("Turtle: [" + turtle.TurtleID + "] in Pool: [" + turtle.Pool.Name + "] at location [" + turtle.StartLocation + "]");
-
-            //            Console.WriteLine("\nOwned Pools");
-            //            foreach (TurtlePool pool in server.GetAllOwnedPools())
-            //                Console.WriteLine("Pool: [" + pool.Name + "] owned by: [" + pool.Owner + "]");
-
-            //            Thread.Sleep(500);
-            //        }
+            //            turtleService.InvokeCommandOnTurtle((int)turtleNum, @"return turtle.turnLeft()");
             //    });
-
-            Console.ReadLine();
-            while(true)
-                foreach (Turtle turtle in server.GetAllTurtles())
-                //Task.Factory.StartNew(() =>
-                    //{
-                        //while (true)
-                            turtle.Movement.TurnRight();
-                    //});
+            //    thread.Name = "Pusher: " + i;
+            //    thread.Start(i);
+            //}
 
             Console.ReadLine();
         }
