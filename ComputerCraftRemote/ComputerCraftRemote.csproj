@@ -49,7 +49,7 @@
   <ItemGroup>
     <Compile Include="ComputerCraftRemoteClient.cs" />
     <Compile Include="TurtleAPI\Inventory.cs" />
-    <Compile Include="TurtleAPI\Location.cs" />
+    <Compile Include="Location.cs" />
     <Compile Include="TurtleAPI\Movement.cs" />
     <Compile Include="RemotePorgram.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

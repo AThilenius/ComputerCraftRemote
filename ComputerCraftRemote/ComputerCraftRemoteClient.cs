@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ComputerCraft.Core.Rpc;
 using ComputerCraftHost.Services.Turtle;
+using ComputerCraftRemote.TurtleAPI;
 using Lidgren.Network;
 
 namespace ComputerCraftRemote
@@ -17,6 +18,7 @@ namespace ComputerCraftRemote
         private NetClient m_netClient;
         private RpcHost m_rpcHost;
         private NetConnection m_serverTarget;
+        private TurtleServiceClient m_turtleClient;
 
         internal String Username;
 
@@ -35,6 +37,8 @@ namespace ComputerCraftRemote
             // Create an RPC host for the connection
             m_rpcHost = new RpcHost(m_netClient);
             m_rpcHost.Start();
+
+            m_turtleClient = GetTurtleService();
         }
 
         ~ComputerCraftRemoteClient()
@@ -76,47 +80,47 @@ namespace ComputerCraftRemote
 
         private void UpdateKnown()
         {
-            //List<TurtleIdPool> turtleIdPools = RemoteingService.getAllTurtles();
-            //List<PoolOwnner> poolOwners = RemoteingService.getAllPools();
+            List<TurtleIdPool> turtleIdPools = m_turtleClient.GetAllTurtles();
+            List<PoolOwner> poolOwners = m_turtleClient.GetAllPools();
 
-            //foreach (TurtleIdPool turtleIdPool in turtleIdPools)
-            //{
-            //    if (!m_knownTurtles.ContainsKey(turtleIdPool.TurtleId))
-            //    {
-            //        // New Turtle!
-            //        Turtle turlte = new Turtle(this, turtleIdPool.TurtleId);
-            //        m_knownTurtles.Add(turtleIdPool.TurtleId, turlte);
-            //    }
-            //}
+            foreach (TurtleIdPool turtleIdPool in turtleIdPools)
+            {
+                if (!m_knownTurtles.ContainsKey(turtleIdPool.TurtleId))
+                {
+                    // New Turtle!
+                    Turtle turlte = new Turtle(this, turtleIdPool.TurtleId);
+                    m_knownTurtles.Add(turtleIdPool.TurtleId, turlte);
+                }
+            }
 
-            //foreach (PoolOwnner poolOwner in poolOwners)
-            //{
-            //    if (!m_knownPools.ContainsKey(poolOwner.PoolName))
-            //    {
-            //        // New Pool!
-            //        TurtlePool pool = new TurtlePool(poolOwner.PoolName);
-            //        m_knownPools.Add(poolOwner.PoolName, pool);
-            //    }
-            //}
+            foreach (PoolOwner poolOwner in poolOwners)
+            {
+                if (!m_knownPools.ContainsKey(poolOwner.PoolName))
+                {
+                    // New Pool!
+                    TurtlePool pool = new TurtlePool(poolOwner.PoolName);
+                    m_knownPools.Add(poolOwner.PoolName, pool);
+                }
+            }
 
-            //foreach (TurtlePool pool in m_knownPools.Values)
-            //    pool.Turtles.Clear();
+            foreach (TurtlePool pool in m_knownPools.Values)
+                pool.Turtles.Clear();
 
-            //// Stitch them back together
-            //foreach (TurtleIdPool turtleIdPool in turtleIdPools)
-            //{
-            //    Turtle turtle = m_knownTurtles[turtleIdPool.TurtleId];
-            //    TurtlePool pool = m_knownPools[turtleIdPool.PoolName];
-            //    turtle.Pool = pool;
-            //    turtle.StartLocation = new Location(turtleIdPool.StartLocation);
-            //    pool.Turtles.Add(turtle);
-            //}
+            // Stitch them back together
+            foreach (TurtleIdPool turtleIdPool in turtleIdPools)
+            {
+                Turtle turtle = m_knownTurtles[turtleIdPool.TurtleId];
+                TurtlePool pool = m_knownPools[turtleIdPool.PoolName];
+                turtle.Pool = pool;
+                turtle.StartLocation = new Location(turtleIdPool.StartLocation);
+                pool.Turtles.Add(turtle);
+            }
 
-            //foreach (PoolOwnner poolOwner in poolOwners)
-            //{
-            //    TurtlePool pool = m_knownPools[poolOwner.PoolName];
-            //    pool.Owner = poolOwner.OwnerName;
-            //}
+            foreach (PoolOwner poolOwner in poolOwners)
+            {
+                TurtlePool pool = m_knownPools[poolOwner.PoolName];
+                pool.Owner = poolOwner.OwnerName;
+            }
 
         }
 

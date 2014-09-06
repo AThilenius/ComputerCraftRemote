@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ComputerCraftRemote.TurtleAPI;
 
-namespace ComputerCraftRemote
+namespace ComputerCraftRemote.TurtleAPI
 {
     public class Turtle
     {

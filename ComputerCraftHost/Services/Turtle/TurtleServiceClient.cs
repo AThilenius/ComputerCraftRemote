@@ -27,6 +27,35 @@ namespace ComputerCraftHost.Services.Turtle
                     command);
         }
 
+        public bool RequestPoolOwnership(string poolName, string ownerName)
+        {
+            return m_host.Invoke<bool>(m_target,
+                    typeof(TurtleServiceHandler).GetMethod("RequestPoolOwnership_Handler"),
+                    poolName,
+                    ownerName);
+        }
+
+        public void FreePool(string poolName)
+        {
+            m_host.Invoke<String>(m_target,
+                    typeof(TurtleServiceHandler).GetMethod("FreePool_Handler"),
+                    poolName);
+        }
+
+        public List<TurtleIdPool> GetAllTurtles()
+        {
+            return m_host.Invoke<List<TurtleIdPool>>(m_target,
+                    typeof(TurtleServiceHandler).GetMethod("GetAllTurtles_Handler"),
+                    null);
+        }
+
+        public List<PoolOwner> GetAllPools()
+        {
+            return m_host.Invoke<List<PoolOwner>>(m_target,
+                    typeof(TurtleServiceHandler).GetMethod("GetAllPools_Handler"),
+                    null);
+        }
+
         public String QuickReturn(String message)
         {
             return m_host.Invoke<String>(m_target,

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ComputerCraftRemote
+namespace ComputerCraftRemote.TurtleAPI
 {
     public class TurtlePool
     {
