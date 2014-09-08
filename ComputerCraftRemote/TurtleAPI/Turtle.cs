@@ -20,7 +20,6 @@ namespace ComputerCraftRemote.TurtleAPI
 
         public Movement Movement { get; internal set; }
 
-
         internal Turtle(ComputerCraftRemoteClient remoteServer, int id)
         {
             RemoteServer = remoteServer;

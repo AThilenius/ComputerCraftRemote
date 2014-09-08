@@ -117,6 +117,7 @@ namespace ComputerCraft.Core.Rpc
                 case NetIncomingMessageType.VerboseDebugMessage:
                 case NetIncomingMessageType.DebugMessage:
                 case NetIncomingMessageType.WarningMessage:
+                    break;
                 case NetIncomingMessageType.ErrorMessage:
                     Console.WriteLine(msg.ReadString());
                     break;
@@ -129,7 +130,7 @@ namespace ComputerCraft.Core.Rpc
                     break;
                 }
                 default:
-                    Console.WriteLine("Unhandled type: " + msg.MessageType);
+                    Console.WriteLine("Unhanded type: " + msg.MessageType);
                     break;
             }
             m_peer.Recycle(msg);
@@ -142,9 +143,12 @@ namespace ComputerCraft.Core.Rpc
                 RpcRequest request = (RpcRequest) rpc;
 
                 // Workaround for JSON bug: http://json.codeplex.com/workitem/20832
-                for (int i = 0; i < request.Args.Length; i++)
-                    if (request.Args[i] is long)
-                        request.Args[i] = (Int32)(Int64)request.Args[i];
+                if (request.Args != null)
+                {
+                    for (int i = 0; i < request.Args.Length; i++)
+                        if (request.Args[i] is long)
+                            request.Args[i] = (Int32)(Int64)request.Args[i];
+                }
 
                 // Invoke the RPC, if a return is needed then enqueue the return
                 RpcResponse response = m_invoker.Invoke(request);

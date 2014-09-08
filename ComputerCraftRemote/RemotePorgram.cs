@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ComputerCraftHost.Services.Turtle;
+using ComputerCraftRemote.TurtleAPI;
 
 namespace ComputerCraftRemote
 {
@@ -13,66 +14,43 @@ namespace ComputerCraftRemote
     {
         public static void Main(String[] args)
         {
-            ComputerCraftRemoteClient client = new ComputerCraftRemoteClient("Alec", "localhost", 9090);
+            Console.Write("User name: ");
+            String username = Console.ReadLine();
 
-            CCServiceClient turtleService = client.GetTurtleService();
+            Console.Write("Remote Address: ");
+            String address = Console.ReadLine();
 
-            turtleService.InvokeCommandOnTurtle(0, "doesNotExist.AlsoDoesntExist()");
+            ComputerCraftRemoteClient client = new ComputerCraftRemoteClient(username, address, 9090);
+
+
+            Console.WriteLine("Getting Free Turtle...");
+            Turtle freeTurtle = client.GetFreeTurtle();
+
+
+            Console.WriteLine("\nAll Turtles");
+            foreach (Turtle turtle in client.GetAllTurtles())
+                Console.WriteLine("Turtle: [" + turtle.TurtleID + "] in Pool: [" + turtle.Pool.Name + "] at location [" + turtle.StartLocation + "]");
+
+            Console.WriteLine("\nAll Pools");
+            foreach (TurtlePool pool in client.GetAllPools())
+                Console.WriteLine("Pool: [" + pool.Name + "] owned by: [" + pool.Owner + "]");
+
+            Console.WriteLine("\n\nOwned Turtles");
+            foreach (Turtle turtle in client.GetAllOwnedTurtles())
+                Console.WriteLine("Turtle: [" + turtle.TurtleID + "] in Pool: [" + turtle.Pool.Name + "] at location [" + turtle.StartLocation + "]");
+
+            Console.WriteLine("\nOwned Pools");
+            foreach (TurtlePool pool in client.GetAllOwnedPools())
+                Console.WriteLine("Pool: [" + pool.Name + "] owned by: [" + pool.Owner + "]");
+
+
+            freeTurtle.Pool.RequestOwnership();
+
+            while (true)
+                freeTurtle.Movement.TurnRight();
             
-            //for(int i = 0; i < 100; i++)
-            //{
-            //    Thread thread = new Thread((turtleNum) =>
-            //        {
-            //            Console.WriteLine("Thread: " + (int)turtleNum);
-            //            Stopwatch timer = Stopwatch.StartNew();
-            //            int count = 500;
-            //            for (int c = 0; c < count; c++)
-            //                turtleService.QuickReturn("Hello World!");
-            //            timer.Stop();
-            //            Console.WriteLine("Thread: [" + (int)turtleNum + "] took [" + timer.Elapsed + "], or [" + ((float)count) / timer.Elapsed.TotalSeconds + "] Ops/Second");
-            //        });
-            //    thread.Name = "Pusher: " + i;
-            //    thread.Start(i);
-            //}
-
-            //for (int i = 0; i < 10; i++)
-            //{
-            //    Thread thread = new Thread((turtleNum) =>
-            //    {
-            //        Console.WriteLine("Thread: " + (int)turtleNum);
-            //        while (true)
-            //            turtleService.InvokeCommandOnTurtle((int)turtleNum, @"return turtle.turnLeft()");
-            //    });
-            //    thread.Name = "Pusher: " + i;
-            //    thread.Start(i);
-            //}
-
-            //Task.Factory.StartNew(() =>
-            //    {
-            //        while (true)
-            //        {
-            //            Console.Clear();
-            //            Console.WriteLine("All Turtles");
-            //            foreach (Turtle turtle in server.GetAllTurtles())
-            //                Console.WriteLine("Turtle: [" + turtle.TurtleID + "] in Pool: [" + turtle.Pool.Name + "] at location [" + turtle.StartLocation + "]");
-
-            //            Console.WriteLine("\nAll Pools");
-            //            foreach (TurtlePool pool in server.GetAllPools())
-            //                Console.WriteLine("Pool: [" + pool.Name + "] owned by: [" + pool.Owner + "]");
-
-            //            Console.WriteLine("\n\nOwned Turtles");
-            //            foreach (Turtle turtle in server.GetAllOwnedTurtles())
-            //                Console.WriteLine("Turtle: [" + turtle.TurtleID + "] in Pool: [" + turtle.Pool.Name + "] at location [" + turtle.StartLocation + "]");
-
-            //            Console.WriteLine("\nOwned Pools");
-            //            foreach (TurtlePool pool in server.GetAllOwnedPools())
-            //                Console.WriteLine("Pool: [" + pool.Name + "] owned by: [" + pool.Owner + "]");
-
-            //            Thread.Sleep(500);
-            //        }
-            //    });
-
             Console.ReadLine();
+
         }
     }
 }

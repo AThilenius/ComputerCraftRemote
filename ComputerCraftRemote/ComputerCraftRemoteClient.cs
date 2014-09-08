@@ -7,18 +7,20 @@ using ComputerCraft.Core.Rpc;
 using ComputerCraftHost.Services.Turtle;
 using ComputerCraftRemote.TurtleAPI;
 using Lidgren.Network;
+using System.Threading;
 
 namespace ComputerCraftRemote
 {
     public class ComputerCraftRemoteClient
     {
+        internal CCServiceClient TurtleClient;
+
         private Dictionary<int, Turtle> m_knownTurtles = new Dictionary<int, Turtle>();
         private Dictionary<String, TurtlePool> m_knownPools = new Dictionary<String, TurtlePool>();
 
         private NetClient m_netClient;
         private RpcHost m_rpcHost;
         private NetConnection m_serverTarget;
-        private CCServiceClient m_turtleClient;
 
         internal String Username;
 
@@ -38,7 +40,7 @@ namespace ComputerCraftRemote
             m_rpcHost = new RpcHost(m_netClient);
             m_rpcHost.Start();
 
-            m_turtleClient = GetTurtleService();
+            TurtleClient = GetTurtleService();
         }
 
         ~ComputerCraftRemoteClient()
@@ -48,6 +50,20 @@ namespace ComputerCraftRemote
         public CCServiceClient GetTurtleService()
         {
             return new CCServiceClient(m_rpcHost, m_serverTarget);
+        }
+
+        public Turtle GetTurtleById(int ID)
+        {
+            while (true)
+            {
+                if (TurtleClient.GetAllTurtles().Where(t => t.TurtleId == ID).Count() == 0)
+                {
+                    Thread.Sleep(100);
+                    continue;
+                }
+
+                return new Turtle(this, ID);
+            }
         }
 
         public Turtle[] GetAllTurtles()
@@ -78,10 +94,25 @@ namespace ComputerCraftRemote
                 .ToArray();
         }
 
+        public Turtle GetFreeTurtle()
+        {
+            while (true)
+            {
+                UpdateKnown();
+                Turtle turtle = GetAllTurtles()
+                    .Where(pool => pool.Owner == "None")
+                    .FirstOrDefault();
+                if (turtle != null)
+                    return turtle;
+
+                Thread.Sleep(100);
+            }
+        }
+
         private void UpdateKnown()
         {
-            List<TurtleIdPool> turtleIdPools = m_turtleClient.GetAllTurtles();
-            List<PoolOwner> poolOwners = m_turtleClient.GetAllPools();
+            List<TurtleIdPool> turtleIdPools = TurtleClient.GetAllTurtles();
+            List<PoolOwner> poolOwners = TurtleClient.GetAllPools();
 
             foreach (TurtleIdPool turtleIdPool in turtleIdPools)
             {

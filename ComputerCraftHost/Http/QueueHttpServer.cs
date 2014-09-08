@@ -157,8 +157,8 @@ namespace ComputerCraftRemote
                         }
 
                         // Set defaults
-                        if (values["PoolName"] == null || values["PoolName"].Trim() == "") values["PoolName"] = "Unassigned";
-                        if (values["Location"] == null || values["Location"].Trim() == "") values["Location"] = "0,0,0";
+                        if (!values.ContainsKey("PoolName") || values["PoolName"].Trim() == "") values["PoolName"] = "Unassigned";
+                        if (!values.ContainsKey("Location") || values["Location"].Trim() == "") values["Location"] = "0,0,0";
 
                         buffer.PoolName = values["PoolName"];
                         buffer.StartingLocation = values["Location"];
@@ -182,8 +182,6 @@ namespace ComputerCraftRemote
 
         public String RunCommand(int computerId, String command)
         {
-            Thread.Sleep(100);
-
             // Get the ComputerBuffer, or create it
             ComputerBuffers buffer = GetComputerBuffers(computerId);
 

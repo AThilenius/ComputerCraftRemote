@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ComputerCraft.Core.Rpc;
-using ComputerCraftRemote;
 using Lidgren.Network;
+using ComputerCraftRemote;
 
 namespace ComputerCraftHost.Services.Turtle
 {
