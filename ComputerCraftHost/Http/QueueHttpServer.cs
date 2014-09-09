@@ -170,10 +170,7 @@ namespace ComputerCraftRemote
                                 OwnerByPoolName.Add(values["PoolName"], "None");
                         }
 
-                        Console.WriteLine("Handshake:");
-                        foreach (var kvp in values)
-                            Console.WriteLine(kvp.Key + " : " + kvp.Value);
-
+                        p.WriteSuccess();
                         break;
                     }
             }

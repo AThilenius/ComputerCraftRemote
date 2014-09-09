@@ -23,15 +23,42 @@ namespace ComputerCraftRemote
             ComputerRemoteServer server = new ComputerRemoteServer(httpServer);
             server.Start();
 
+            Task.Factory.StartNew(() =>
+                {
+                    while (true)
+                    {
+                        Console.Title = "Lidgren Connections: [" + server.LidgrenNetServer.Connections.Count + "]  Minecraft Turtles: [" + httpServer.ComputerBuffersById.Count + "]";
+                        Thread.Sleep(100);
+                    }
+                });
+
+            Console.WriteLine("[ID] [Times] [Command]");
             while (true)
             {
                 Console.Write("> ");
                 String command = Console.ReadLine();
-                int id = int.Parse(command.Split()[0]);
-                command = command.Remove(0, 2);
-                Console.Write("[" + command + "]: ");
-                String results = httpServer.RunCommand(id, command);
-                Console.WriteLine(results);
+                String[] tokens = command.Split();
+
+                if (tokens.Length < 3)
+                {
+                    Console.WriteLine("Invalid command format");
+                    continue;
+                }
+
+                int id = int.Parse(tokens[0]);
+                int times = int.Parse(tokens[1]);
+
+
+                String turtleCommand = "";
+                for (int i = 2; i < tokens.Length; i++)
+                    turtleCommand = turtleCommand + tokens[i];
+
+                Console.WriteLine("[" + command + "] [" + times + "] times returned: ");
+                for (int i = 0; i < times; i++)
+                {
+                    String results = httpServer.RunCommand(id, turtleCommand);
+                    Console.WriteLine(results);
+                }
             }
 
         }

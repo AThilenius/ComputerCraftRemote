@@ -43,21 +43,18 @@ namespace ComputerCraftHost.Services.Turtle
 
         public static bool RequestPoolOwnership_Handler(string poolName, string ownerName)
         {
-            lock (m_httpServer.OwnerByPoolName)
+            if (!m_httpServer.OwnerByPoolName.ContainsKey(poolName))
+                m_httpServer.OwnerByPoolName.Add(poolName, "None");
+
+            if (m_httpServer.OwnerByPoolName[poolName] == "None")
             {
-                if (!m_httpServer.OwnerByPoolName.ContainsKey(poolName))
-                    m_httpServer.OwnerByPoolName.Add(poolName, "None");
-
-                if (m_httpServer.OwnerByPoolName[poolName] == "None")
-                {
-                    Console.WriteLine(ownerName + " took ownership of pool " + poolName);
-                    m_httpServer.OwnerByPoolName[poolName] = ownerName;
-                    return true;
-                }
-
-                else
-                    return false;
+                Console.WriteLine(ownerName + " took ownership of pool " + poolName);
+                m_httpServer.OwnerByPoolName[poolName] = ownerName;
+                return true;
             }
+
+            else
+                return false;
         }
 
         public static void FreePool_Handler(string poolName)

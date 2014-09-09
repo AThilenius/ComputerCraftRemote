@@ -12,45 +12,137 @@ namespace ComputerCraftRemote
 {
     public class RemotePorgram
     {
-        public static void Main(String[] args)
+        public static CCServiceProvider TurtleService;
+
+        public static void Main(string[] args)
         {
-            Console.Write("User name: ");
-            String username = Console.ReadLine();
+            TurtleService = new CCServiceProvider(@"Alec", @"localhost", 9090);
 
-            Console.Write("Remote Address: ");
-            String address = Console.ReadLine();
+            //WhileLoop();
+            //WhileAndForLoop();
+            //DoWhileAndIfStatment();
+            //WRONGMoreComplex();
+            //CORRECTMoreComplex();
 
-            ComputerCraftRemoteClient client = new ComputerCraftRemoteClient(username, address, 9090);
+            Task.Factory.StartNew(WhileLoop);
+            Task.Factory.StartNew(WhileAndForLoop);
+            Task.Factory.StartNew(DoWhileAndIfStatment);
+            //Task.Factory.StartNew(CORRECTMoreComplex);
+            Console.ReadLine();
+        }
 
-
-            Console.WriteLine("Getting Free Turtle...");
-            Turtle freeTurtle = client.GetFreeTurtle();
-
-
-            Console.WriteLine("\nAll Turtles");
-            foreach (Turtle turtle in client.GetAllTurtles())
-                Console.WriteLine("Turtle: [" + turtle.TurtleID + "] in Pool: [" + turtle.Pool.Name + "] at location [" + turtle.StartLocation + "]");
-
-            Console.WriteLine("\nAll Pools");
-            foreach (TurtlePool pool in client.GetAllPools())
-                Console.WriteLine("Pool: [" + pool.Name + "] owned by: [" + pool.Owner + "]");
-
-            Console.WriteLine("\n\nOwned Turtles");
-            foreach (Turtle turtle in client.GetAllOwnedTurtles())
-                Console.WriteLine("Turtle: [" + turtle.TurtleID + "] in Pool: [" + turtle.Pool.Name + "] at location [" + turtle.StartLocation + "]");
-
-            Console.WriteLine("\nOwned Pools");
-            foreach (TurtlePool pool in client.GetAllOwnedPools())
-                Console.WriteLine("Pool: [" + pool.Name + "] owned by: [" + pool.Owner + "]");
-
-
-            freeTurtle.Pool.RequestOwnership();
+        public static void WhileLoop()
+        {
+            Turtle greenTurtle = TurtleService.GetTurtleById(11);
 
             while (true)
-                freeTurtle.Movement.TurnRight();
-            
-            Console.ReadLine();
-
+                greenTurtle.Movement.TurnRight();
         }
+
+        public static void WhileAndForLoop()
+        {
+            Turtle blackTurtle = TurtleService.GetTurtleById(20);
+
+            while (true)
+            {
+                for (int i = 0; i < 4; i++)
+                    blackTurtle.Movement.TurnLeft();
+
+                Thread.Sleep(1000);
+
+                for (int i = 0; i < 4; i++)
+                    blackTurtle.Movement.TurnRight();
+
+                Thread.Sleep(1000);
+            }
+        }
+
+        public static void DoWhileAndIfStatment()
+        {
+            Turtle purpleTurtle = TurtleService.GetTurtleById(10);
+
+            Boolean moveSucceeded = false; 
+            do
+            {
+                moveSucceeded = purpleTurtle.Movement.Forward();
+            } while(moveSucceeded);
+
+            // Hit a wall, turn around
+            purpleTurtle.Movement.TurnLeft();
+            purpleTurtle.Movement.TurnLeft();
+
+            do
+            {
+            } while (purpleTurtle.Movement.Forward());
+
+            // Hit the start wall, turn around again
+            purpleTurtle.Movement.TurnLeft();
+            purpleTurtle.Movement.TurnLeft();
+        }
+
+        public static void WRONGMoreComplex()
+        {
+            Turtle blueTurtle = TurtleService.GetTurtleById(9);
+
+            // Go forward, checking left each time
+            while (blueTurtle.Movement.Forward())
+                if (!OurFirstFunction_CheckLeft(blueTurtle))
+                    break;
+
+            // Hit end, turn around
+            blueTurtle.Movement.TurnLeft();
+            blueTurtle.Movement.TurnLeft();
+
+            while (blueTurtle.Movement.Forward())
+                if (!OurSecondFunction_CheckRight(blueTurtle))
+                    break;
+
+            // Back at start, turn around
+            blueTurtle.Movement.TurnLeft();
+            blueTurtle.Movement.TurnLeft();
+        }
+
+        public static void CORRECTMoreComplex()
+        {
+            Turtle blueTurtle = TurtleService.GetTurtleById(9);
+
+            // Go forward, checking left each time
+            while (OurFirstFunction_CheckLeft(blueTurtle) || blueTurtle.Movement.Forward())
+            {
+            }
+
+            // Hit end, turn around
+            blueTurtle.Movement.TurnLeft();
+            blueTurtle.Movement.TurnLeft();
+
+            while (OurSecondFunction_CheckRight(blueTurtle) || blueTurtle.Movement.Forward())
+            {
+            }
+
+            // Back at start, turn around
+            blueTurtle.Movement.TurnLeft();
+            blueTurtle.Movement.TurnLeft();
+        }
+
+        public static Boolean OurFirstFunction_CheckLeft(Turtle blueTurtle)
+        {
+            blueTurtle.Movement.TurnLeft();
+            bool isThereAHole = blueTurtle.Movement.Forward();
+            if (!isThereAHole)
+                blueTurtle.Movement.TurnRight();
+
+            return isThereAHole;
+        }
+
+        public static Boolean OurSecondFunction_CheckRight(Turtle blueTurtle)
+        {
+            blueTurtle.Movement.TurnRight();
+            bool isThereAHole = blueTurtle.Movement.Forward();
+            if (!isThereAHole)
+                blueTurtle.Movement.TurnLeft();
+
+            return isThereAHole;
+        }
+
     }
 }

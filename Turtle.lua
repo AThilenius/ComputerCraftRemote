@@ -5,13 +5,20 @@ commandAddress = address .. "command/" .. idNumber
 
 function Handshake(handshakeValues)
 	while true do
+
+		retValue = nil;
 		if pcall(function()
 				-- Post my pool name, link it with computer ID
-				http.post(linkAddress, handshakeValues)
-				io.write(http.get(linkAddress).readAll())
+				retValue = http.post(linkAddress, handshakeValues)
+				--io.write(http.get(linkAddress).readAll())
 			end) then
-			-- No Error, return
-			return
+
+			-- No Throw, check return value
+			if (retValue == nil) then
+				io.write(".")
+			else
+				return
+			end
 		end
 
 	end
@@ -50,17 +57,33 @@ function PumpCommands()
 end
 
 -- Get Startup Info
-io.write("Pool Name: ")
-poolNameInput = io.read()
-
+poolNameInput = "Unassigned"
 handshakeString = 
 	"PoolName:" .. poolNameInput .. "\n"
+
+-- Check fuel
+if turtle.getFuelLevel() < 80 then
+	io.write("Please place fuel in slot 0\n")
+end
+
+while turtle.getFuelLevel() < 80 do
+	os.setComputerLabel("REFUEL")
+	while turtle.refuel(16) do end
+	os.sleep(0.1)
+end
+
+os.setComputerLabel("Disconnected")
 
 -- Run or re-connect
 while true do
 	io.write("Attempting to connect to HTTP server\n")
 	Handshake(handshakeString)
+	term.clear()
+	term.setCursorPos(1, 1)
 	io.write("Connected!\n");
+	io.write("This is turtle ID " .. idNumber .. "\n")
+	os.setComputerLabel("ID: " .. idNumber)
 	PumpCommands()
 	io.write("Lost connection. Reconnecting...\n")
+	os.setComputerLabel("Disconnected")
 end

@@ -9,7 +9,7 @@ namespace ComputerCraftRemote.TurtleAPI
 {
     public class Turtle
     {
-        internal ComputerCraftRemoteClient RemoteServer; 
+        internal CCServiceProvider RemoteServer; 
 
         // Public API
         public int TurtleID { get; internal set; }
@@ -20,7 +20,7 @@ namespace ComputerCraftRemote.TurtleAPI
 
         public Movement Movement { get; internal set; }
 
-        internal Turtle(ComputerCraftRemoteClient remoteServer, int id)
+        internal Turtle(CCServiceProvider remoteServer, int id)
         {
             RemoteServer = remoteServer;
             TurtleID = id;

@@ -11,10 +11,14 @@ using System.Threading;
 
 namespace ComputerCraftRemote
 {
-    public class ComputerCraftRemoteClient
+    /// <summary>
+    /// The ComputerCraft Service Provider
+    /// </summary>
+    public class CCServiceProvider
     {
         internal CCServiceClient TurtleClient;
 
+        private Queue<Turtle> m_freeTurtles = new Queue<Turtle>();
         private Dictionary<int, Turtle> m_knownTurtles = new Dictionary<int, Turtle>();
         private Dictionary<String, TurtlePool> m_knownPools = new Dictionary<String, TurtlePool>();
 
@@ -24,8 +28,10 @@ namespace ComputerCraftRemote
 
         internal String Username;
 
-        public ComputerCraftRemoteClient(String username, String address, int port)
+        public CCServiceProvider(String username, String address, int port)
         {
+            // HACK(athilenius)
+            Thread.Sleep(500);
             Username = username;
 
             // Connect Lidgren
@@ -43,7 +49,7 @@ namespace ComputerCraftRemote
             TurtleClient = GetTurtleService();
         }
 
-        ~ComputerCraftRemoteClient()
+        ~CCServiceProvider()
         {
         }
 
@@ -99,11 +105,8 @@ namespace ComputerCraftRemote
             while (true)
             {
                 UpdateKnown();
-                Turtle turtle = GetAllTurtles()
-                    .Where(pool => pool.Owner == "None")
-                    .FirstOrDefault();
-                if (turtle != null)
-                    return turtle;
+                if (m_freeTurtles.Count > 0)
+                    return m_freeTurtles.Dequeue();
 
                 Thread.Sleep(100);
             }
@@ -121,6 +124,7 @@ namespace ComputerCraftRemote
                     // New Turtle!
                     Turtle turlte = new Turtle(this, turtleIdPool.TurtleId);
                     m_knownTurtles.Add(turtleIdPool.TurtleId, turlte);
+                    m_freeTurtles.Enqueue(turlte);
                 }
             }
 

@@ -11,8 +11,8 @@ namespace ComputerCraftHost
 {
     public class ComputerRemoteServer
     {
+        internal NetServer LidgrenNetServer;
         private QueueHttpServer m_httpServer;
-        private NetServer m_netServer;
         private RpcHost m_rpcPeer;
 
         public ComputerRemoteServer(QueueHttpServer httpServer)
@@ -25,11 +25,11 @@ namespace ComputerCraftHost
             // Connect Lidgren
             NetPeerConfiguration config = new NetPeerConfiguration("ComputerCraftRemote");
             config.Port = 9090;
-            m_netServer = new NetServer(config);
-            m_netServer.Start();
-
+            LidgrenNetServer = new NetServer(config);
+            LidgrenNetServer.Start();
+            
             // Create RPC host
-            m_rpcPeer = new RpcHost(m_netServer);
+            m_rpcPeer = new RpcHost(LidgrenNetServer);
             m_rpcPeer.Start();
         }
 
