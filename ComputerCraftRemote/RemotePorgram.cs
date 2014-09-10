@@ -17,23 +17,26 @@ namespace ComputerCraftRemote
         public static void Main(string[] args)
         {
             TurtleService = new CCServiceProvider(@"Alec", @"localhost", 9090);
+            TurtleService.Terminal.Info("Welcome to the debug console!");
 
-            //WhileLoop();
+            WhileLoop();
             //WhileAndForLoop();
             //DoWhileAndIfStatment();
             //WRONGMoreComplex();
             //CORRECTMoreComplex();
 
-            Task.Factory.StartNew(WhileLoop);
-            Task.Factory.StartNew(WhileAndForLoop);
-            Task.Factory.StartNew(DoWhileAndIfStatment);
+
+            //Task.Factory.StartNew(WhileLoop);
+            //Task.Factory.StartNew(WhileAndForLoop);
+            //Task.Factory.StartNew(DoWhileAndIfStatment);
             //Task.Factory.StartNew(CORRECTMoreComplex);
-            Console.ReadLine();
+            //Console.ReadLine();
         }
 
         public static void WhileLoop()
         {
             Turtle greenTurtle = TurtleService.GetTurtleById(11);
+            TurtleService.Terminal.Info("Spinning green turtle in circles!");
 
             while (true)
                 greenTurtle.Movement.TurnRight();
@@ -42,7 +45,8 @@ namespace ComputerCraftRemote
         public static void WhileAndForLoop()
         {
             Turtle blackTurtle = TurtleService.GetTurtleById(20);
-
+            TurtleService.Terminal.Info("Back turtle doing the dishwasher!");
+            
             while (true)
             {
                 for (int i = 0; i < 4; i++)
@@ -60,6 +64,7 @@ namespace ComputerCraftRemote
         public static void DoWhileAndIfStatment()
         {
             Turtle purpleTurtle = TurtleService.GetTurtleById(10);
+            TurtleService.Terminal.Info("Purple running the loop!");
 
             Boolean moveSucceeded = false; 
             do
@@ -67,7 +72,7 @@ namespace ComputerCraftRemote
                 moveSucceeded = purpleTurtle.Movement.Forward();
             } while(moveSucceeded);
 
-            // Hit a wall, turn around
+            TurtleService.Terminal.Info("Hit a wall, turn around");
             purpleTurtle.Movement.TurnLeft();
             purpleTurtle.Movement.TurnLeft();
 
@@ -75,7 +80,7 @@ namespace ComputerCraftRemote
             {
             } while (purpleTurtle.Movement.Forward());
 
-            // Hit the start wall, turn around again
+            TurtleService.Terminal.Info("Hit start wall, turn around again");
             purpleTurtle.Movement.TurnLeft();
             purpleTurtle.Movement.TurnLeft();
         }
@@ -83,6 +88,7 @@ namespace ComputerCraftRemote
         public static void WRONGMoreComplex()
         {
             Turtle blueTurtle = TurtleService.GetTurtleById(9);
+            TurtleService.Terminal.Info("Starting MoreComplex");
 
             // Go forward, checking left each time
             while (blueTurtle.Movement.Forward())
@@ -90,6 +96,7 @@ namespace ComputerCraftRemote
                     break;
 
             // Hit end, turn around
+            TurtleService.Terminal.Info("Hit end, turning around.");
             blueTurtle.Movement.TurnLeft();
             blueTurtle.Movement.TurnLeft();
 
@@ -98,6 +105,7 @@ namespace ComputerCraftRemote
                     break;
 
             // Back at start, turn around
+            TurtleService.Terminal.Info("Back at beginning. Turning around.");
             blueTurtle.Movement.TurnLeft();
             blueTurtle.Movement.TurnLeft();
         }

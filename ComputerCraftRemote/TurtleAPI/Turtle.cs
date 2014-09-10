@@ -19,6 +19,8 @@ namespace ComputerCraftRemote.TurtleAPI
         public Boolean HasOwnership { get { return RemoteServer.Username == Owner; } }
 
         public Movement Movement { get; internal set; }
+        public Inventory Inventory { get; internal set; }
+        public Terminal Terminal { get; internal set; }
 
         internal Turtle(CCServiceProvider remoteServer, int id)
         {
@@ -26,6 +28,8 @@ namespace ComputerCraftRemote.TurtleAPI
             TurtleID = id;
 
             Movement = new Movement(this);
+            Inventory = new Inventory(this);
+            Terminal = new Terminal(this);
         }
 
 

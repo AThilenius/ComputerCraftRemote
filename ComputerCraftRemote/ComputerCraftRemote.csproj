@@ -57,6 +57,7 @@
     <Compile Include="TurtleAPI\Movement.cs" />
     <Compile Include="RemotePorgram.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TurtleAPI\Terminal.cs" />
     <Compile Include="TurtleAPI\Turtle.cs" />
     <Compile Include="TurtleAPI\TurtlePool.cs" />
   </ItemGroup>

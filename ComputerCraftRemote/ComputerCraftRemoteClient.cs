@@ -16,6 +16,8 @@ namespace ComputerCraftRemote
     /// </summary>
     public class CCServiceProvider
     {
+        public Terminal Terminal;
+
         internal CCServiceClient TurtleClient;
 
         private Queue<Turtle> m_freeTurtles = new Queue<Turtle>();
@@ -47,6 +49,11 @@ namespace ComputerCraftRemote
             m_rpcHost.Start();
 
             TurtleClient = GetTurtleService();
+
+            // HACK(athilenius) Ewwww
+            Terminal = GetTurtleById(22).Terminal;
+            Terminal.SetTextScale(2);
+            Terminal.Clear();
         }
 
         ~CCServiceProvider()
